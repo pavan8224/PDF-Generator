@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCQ Page Maker Advanced</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#111;background:#f2f3f5}.app{max-width:1150px;margin:22px auto;padding:0 14px}h1{font-size:24px;margin:0 0 8px}.intro{color:#555;line-height:1.5;margin:0 0 18px}.panel{background:white;border-radius:12px;padding:18px;box-shadow:0 3px 18px #0000000c;margin-bottom:16px}label{display:block;font-weight:700;margin:10px 0 6px}textarea,input,select{width:100%;padding:10px 11px;border:1px solid #c9cdd3;border-radius:8px;font:15px/1.45 Arial,"Noto Sans Devanagari",sans-serif}textarea{min-height:230px;resize:vertical}input[type=color]{height:42px;padding:4px}input[type=range]{padding:0}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}h3{margin:20px 0 5px;font-size:17px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{border:0;border-radius:8px;padding:11px 15px;background:#171717;color:white;font-weight:700;cursor:pointer}button.secondary{background:#e7e9ec;color:#111}.hint{font-size:13px;color:#666;margin-top:8px;line-height:1.5}#status{margin-top:12px;color:#245b2b;font-weight:700}.checkrow{display:flex;align-items:center;gap:9px;margin-top:12px}.checkrow input{width:auto}.checkrow label{margin:0}
+#preview{margin:18px auto}.page-preview{position:relative;background:white;overflow:hidden;margin:0 auto 18px;box-shadow:0 3px 14px #0002}.sheet{position:relative;background:white;overflow:hidden;display:flex;flex-direction:column;padding:6%;width:100%;height:100%}.sheet-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr);gap:3%;flex:1;min-height:0}.sheet-content.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sheet-content.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sheet-content.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sheet-content.has-divider:after{content:"";position:absolute;top:0;bottom:0;left:calc(100% / var(--cols));border-left:1px solid #555;pointer-events:none}.sheet-content.cols-3.has-divider:after{left:33.333%}.sheet-content.cols-4.has-divider:after{left:25%}.question-card{min-width:0;overflow-wrap:anywhere;padding:0 2%;break-inside:avoid}.question-text{font-weight:700;line-height:1.35;white-space:pre-wrap;margin:0 0 .7em;overflow-wrap:anywhere}.option-list{display:flex;flex-direction:column;gap:.45em}.option-text{font-weight:700;line-height:1.3;white-space:pre-wrap;overflow-wrap:anywhere}.answer-text{font-weight:700;line-height:1.3;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:.65em}.watermark{position:absolute;transform:translate(-50%,-50%);pointer-events:none;z-index:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;font-weight:900;overflow:hidden}.watermark img{width:100%;height:100%;object-fit:contain}.wmtext{padding:5px;overflow-wrap:anywhere}.sheet-footer{font-size:10px;color:#777;text-align:center;padding-top:5px;z-index:1}
+@media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}.app{margin:12px auto}.panel{padding:13px}}
+@page{size:A4 portrait;margin:0}
+@media print{
+ html,body{margin:0!important;padding:0!important;background:white!important;width:auto!important}
+ .app{display:block!important;max-width:none!important;width:auto!important;margin:0!important;padding:0!important}
+ .controls,.app>h1,.app>.intro,#status{display:none!important}
+ #preview{display:block!important;margin:0!important;padding:0!important;width:auto!important}
+ .page-preview{position:relative!important;margin:0!important;box-shadow:none!important;overflow:hidden!important;break-after:page;page-break-after:always}
+ .page-preview:last-child{break-after:auto;page-break-after:auto}
+ .sheet{position:relative!important;display:flex!important;width:100%!important;height:100%!important;overflow:hidden!important}
+ .watermark{position:absolute!important;display:flex!important;z-index:0!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .watermark img{display:block!important;visibility:visible!important}
+ .sheet-content{position:relative!important;z-index:1!important}
+ .sheet-content.has-divider:after{display:block!important}
+}
+</style>
+<style id="dynamicPageStyle">@page{size:A4 portrait;margin:0}</style>
+</head>
+<body>
+<div class="app">
+<h1>MCQ Page Maker Advanced</h1>
+<p class="intro">MCQ paste करें, page size, columns और answers की styling सेट करें। Watermark हर पेज पर प्रिंट होगा।</p>
+<div class="panel controls">
+<label for="questions">Questions (एक साथ कई प्रश्न paste करें)</label>
+<textarea id="questions" placeholder="1. प्लासी का युद्ध कब हुआ था?
+A) 1757
+B) 1764
+C) 1857
+D) 1773
+Answer: A) 1757
+
+2. भारत का राष्ट्रीय पशु कौन है?
+A) शेर
+B) बाघ
+C) हाथी
+D) घोड़ा
+Answer: B) बाघ"></textarea>
+<div class="hint">हर प्रश्न की शुरुआत 1. या Q1. से करें। विकल्प A), B), C), D) से शुरू करें। उत्तर के लिए अलग लाइन पर Answer: लिखें।</div>
+
+<h3>Page Size & Layout</h3>
+<div class="grid3">
+<div><label for="pagePreset">Page size</label><select id="pagePreset">
+<option value="A4P">A4 — Vertical (Portrait)</option><option value="A4L">A4 — Landscape</option><option value="A3P">A3 — Vertical</option><option value="A3L">A3 — Landscape</option><option value="A5P">A5 — Vertical</option><option value="A5L">A5 — Landscape</option><option value="LetterP">Letter — Vertical</option><option value="LetterL">Letter — Landscape</option><option value="LegalP">Legal — Vertical</option><option value="LegalL">Legal — Landscape</option><option value="custom">Custom size (mm)</option>
+</select></div>
+<div><label for="customW">Custom width (mm)</label><input id="customW" type="number" min="50" max="1000" value="210"></div>
+<div><label for="customH">Custom height (mm)</label><input id="customH" type="number" min="50" max="1000" value="297"></div>
+</div>
+<div class="grid3">
+<div><label for="perPage">Questions per page</label><select id="perPage"><option value="1">1 question</option><option value="2">2 questions</option><option value="4">4 questions</option><option value="6">6 questions</option><option value="8">8 questions</option><option value="10">10 questions</option><option value="12">12 questions</option><option value="16">16 questions</option><option value="20">20 questions</option><option value="all">All questions on one page</option></select></div>
+<div><label for="marginSize">Page margins</label><select id="marginSize"><option value="4">Narrow</option><option value="6" selected>Normal</option><option value="10">Wide</option></select></div>
+<div><label for="columns">Questions columns</label><select id="columns"><option value="1">1 column</option><option value="2">2 columns + centre line</option><option value="3">3 columns + divider lines</option><option value="4">4 columns + divider lines</option></select></div>
+</div>
+<div class="hint">3 या 4 कॉलम चुनने पर कॉलमों के बीच divider lines दिखेंगी। Questions per page तय करता है कि एक पेज पर कितने सवाल होंगे।</div>
+
+<h3>Question की सेटिंग</h3>
+<div class="grid4">
+<div><label for="qColor">Question colour</label><input type="color" id="qColor" value="#111111"></div>
+<div><label for="qSize">Question size: <span id="qSizeVal">25</span> pt</label><input type="range" id="qSize" min="8" max="40" value="25" oninput="qSizeVal.textContent=this.value"></div>
+<div><label for="qWeight">Question style</label><select id="qWeight"><option value="700">Bold</option><option value="400">Normal</option><option value="800">Extra bold</option></select></div>
+<div><label for="qGap">Question spacing</label><select id="qGap"><option value="normal">Normal</option><option value="compact">Compact</option><option value="wide">Wide</option></select></div>
+</div>
+<h3>Options की सेटिंग</h3>
+<div class="grid4">
+<div><label for="oColor">Option colour</label><input type="color" id="oColor" value="#111111"></div>
+<div><label for="oSize">Option size: <span id="oSizeVal">20</span> pt</label><input type="range" id="oSize" min="7" max="36" value="20" oninput="oSizeVal.textContent=this.value"></div>
+<div><label for="oWeight">Option style</label><select id="oWeight"><option value="700">Bold</option><option value="400">Normal</option><option value="800">Extra bold</option></select></div>
+<div><label for="optionLayout">Options layout</label><select id="optionLayout"><option value="vertical">One below another</option><option value="grid">Two options per row</option></select></div>
+</div>
+<h3>Answer की सेटिंग</h3>
+<div class="grid4">
+<div><label for="aColor">Answer colour</label><input type="color" id="aColor" value="#16803c"></div>
+<div><label for="aSize">Answer size: <span id="aSizeVal">18</span> pt</label><input type="range" id="aSize" min="7" max="36" value="18" oninput="aSizeVal.textContent=this.value"></div>
+<div><label for="aWeight">Answer style</label><select id="aWeight"><option value="700">Bold</option><option value="400">Normal</option><option value="800">Extra bold</option></select></div>
+<div><label for="showAnswers">Answers in output</label><select id="showAnswers"><option value="show">Show answers</option><option value="hide">Hide answers</option></select></div>
+<div><label for="aPosition">सही उत्तर की Position</label><select id="aPosition"><option value="afterOptions">विकल्पों के नीचे</option><option value="afterQuestion">प्रश्न के तुरंत नीचे</option><option value="beforeQuestion">प्रश्न के ऊपर</option></select></div>
+<div><label for="aAlign">सही उत्तर की Alignment</label><select id="aAlign"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div>
+</div>
+
+<h3>Custom Watermark / Logo</h3>
+<div class="grid2"><div><label for="brand">Watermark text</label><input id="brand" value="PK Study Point" placeholder="अपना watermark नाम"></div><div><label for="wmImage">Watermark image / logo upload</label><input id="wmImage" type="file" accept="image/*"><div class="hint">अपनी logo image चुनें।</div></div></div>
+<div class="grid4">
+<div><label for="wmX">Position X: <span id="wmXVal">50</span>%</label><input type="range" id="wmX" min="0" max="100" value="50" oninput="wmXVal.textContent=this.value"></div>
+<div><label for="wmY">Position Y: <span id="wmYVal">50</span>%</label><input type="range" id="wmY" min="0" max="100" value="50" oninput="wmYVal.textContent=this.value"></div>
+<div><label for="wmWidth">Watermark width: <span id="wmWidthVal">35</span>%</label><input type="range" id="wmWidth" min="5" max="90" value="35" oninput="wmWidthVal.textContent=this.value"></div>
+<div><label for="wmOpacity">Opacity: <span id="wmOpacityVal">13</span>%</label><input type="range" id="wmOpacity" min="0" max="100" value="13" oninput="wmOpacityVal.textContent=this.value"></div>
+</div>
+<div class="grid2"><div><label for="wmColor">Text watermark colour</label><input type="color" id="wmColor" value="#6b536f"></div><div><label for="wmFont">Text watermark font size: <span id="wmFontVal">30</span> px</label><input type="range" id="wmFont" min="10" max="80" value="30" oninput="wmFontVal.textContent=this.value"></div></div>
+<div class="actions"><button onclick="makePages()">Preview Pages / Apply Settings</button><button onclick="window.print()">Print / Save as PDF</button><button class="secondary" onclick="resetSettings()">Reset Design</button><button class="secondary" onclick="clearAll()">Clear Questions</button></div>
+<div class="hint">PDF print dialog में paper size को चुने गए size के समान रखें, margins None और scale Default रखें।</div><div id="status"></div>
+</div>
+<div id="preview"></div>
+</div>
+<script>
+let watermarkData='';
+const $=id=>document.getElementById(id);
+const presets={A4P:[210,297],A4L:[297,210],A3P:[297,420],A3L:[420,297],A5P:[148,210],A5L:[210,148],LetterP:[215.9,279.4],LetterL:[279.4,215.9],LegalP:[215.9,355.6],LegalL:[355.6,215.9]};
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function parseQuestions(raw){
+ const lines=raw.replace(/\r/g,'').split('\n'),blocks=[];let current=[];
+ const startRe=/^\s*(?:(?:Q(?:uestion)?\s*)?\d+\s*[.)、:-]\s*|प्रश्न\s*\d+\s*[.)、:-]\s*)/i;
+ for(const line of lines){if(line.trim()&&startRe.test(line)&&current.some(x=>x.trim())){blocks.push(current.join('\n').trim());current=[line];}else if(!line.trim()){if(current.some(x=>x.trim()))current.push('');else current=[];}else current.push(line);}
+ if(current.some(x=>x.trim()))blocks.push(current.join('\n').trim());
+ return blocks.map(block=>{
+  const ls=block.split('\n').map(x=>x.trim()).filter(Boolean);
+  const ans=ls.find(x=>/^(?:answer|ans|उत्तर)\s*[:：-]/i.test(x));
+  const qi=ls.findIndex(x=>!/^(?:[A-Da-d]|[१-४])\s*[\).:-]/.test(x)&&!(/^(?:answer|ans|उत्तर)\s*[:：-]/i.test(x)));
+  return {question:ls[qi>=0?qi:0]||'प्रश्न',options:ls.filter(x=>x!== (ls[qi>=0?qi:0]) && !/^(?:answer|ans|उत्तर)\s*[:：-]/i.test(x)),answer:ans||''};
+ });
+}
+function pageDims(){const k=$('pagePreset').value;if(k==='custom')return [Math.max(50,Number($('customW').value)||210),Math.max(50,Number($('customH').value)||297)];return presets[k]||presets.A4P;}
+function makePages(){
+ const raw=$('questions').value.trim(),preview=$('preview'),status=$('status');if(!raw){preview.innerHTML='';status.textContent='पहले अपने MCQ paste करें।';return;}
+ const qs=parseQuestions(raw),[pw,ph]=pageDims();$('dynamicPageStyle').textContent=`@page{size:${pw}mm ${ph}mm;margin:0}`;
+ const per=$('perPage').value==='all'?qs.length:Math.max(1,Number($('perPage').value)||1),cols=Number($('columns').value)||1,margin=Number($('marginSize').value)||6;
+ const qColor=$('qColor').value,qSize=Number($('qSize').value),qWeight=$('qWeight').value,gap=$('qGap').value;
+ const oColor=$('oColor').value,oSize=Number($('oSize').value),oWeight=$('oWeight').value,opLayout=$('optionLayout').value;
+ const aColor=$('aColor').value,aSize=Number($('aSize').value),aWeight=$('aWeight').value,showAnswers=$('showAnswers').value==='show',aPosition=$('aPosition').value,aAlign=$('aAlign').value;
+ const x=$('wmX').value,y=$('wmY').value,w=$('wmWidth').value,opacity=Number($('wmOpacity').value)/100,wmColor=$('wmColor').value,wmFont=$('wmFont').value,brand=$('brand').value.trim();
+ const pages=[];for(let i=0;i<qs.length;i+=per)pages.push(qs.slice(i,i+per));
+ preview.innerHTML=pages.map(page=>{
+  const cards=page.map(q=>{
+   const qtxt=q.question.replace(/^Q(?:uestion)?\s*/i,'');
+   const opts=q.options.map(o=>`<div class="option-text" style="color:${oColor};font-size:${oSize}pt;font-weight:${oWeight}">${escapeHtml(o)}</div>`).join('');
+   const answer=showAnswers&&q.answer?`<div class="answer-text" style="color:${aColor};font-size:${aSize}pt;font-weight:${aWeight};text-align:${aAlign}">${escapeHtml(q.answer)}</div>`:'';
+   const qhtml=`<div class="question-text" style="color:${qColor};font-size:${qSize}pt;font-weight:${qWeight};margin-bottom:${gap==='compact'?'0.25em':gap==='wide'?'1.2em':'0.7em'}">${escapeHtml(qtxt)}</div>`;
+   const ohtml=`<div class="option-list" style="${opLayout==='grid'?'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:8px;':''}">${opts}</div>`;
+   const ordered=aPosition==='beforeQuestion'?answer+qhtml+ohtml:aPosition==='afterQuestion'?qhtml+answer+ohtml:qhtml+ohtml+answer;
+   return `<article class="question-card">${ordered}</article>`;
+  }).join('');
+  const wm=watermarkData?`<div class="watermark" style="left:${x}%;top:${y}%;width:${w}%;height:${w}%;opacity:${opacity}"><img src="${watermarkData}" alt="watermark"></div>`:(brand?`<div class="watermark wmtext" style="left:${x}%;top:${y}%;width:${w}%;height:${w}%;opacity:${opacity};color:${wmColor};font-size:${wmFont}px;border:3px solid ${wmColor};border-radius:50%">${escapeHtml(brand)}</div>`:'');
+  return `<div class="page-preview" style="width:${pw}mm;height:${ph}mm"><section class="sheet" style="width:${pw}mm;height:${ph}mm;padding:${margin}%"><div class="sheet-content cols-${cols} ${cols>1?'has-divider':''}" style="--cols:${cols}">${cards}</div>${wm}</section></div>`;
+ }).join('');
+ status.textContent=`${qs.length} प्रश्न तैयार — ${pages.length} पेज, प्रति पेज ${per} प्रश्न, ${cols} कॉलम।`;
+}
+$('wmImage').addEventListener('change',function(){const f=this.files&&this.files[0];if(!f){watermarkData='';makePages();return;}const r=new FileReader();r.onload=()=>{watermarkData=r.result;makePages();};r.readAsDataURL(f);});
+$('pagePreset').addEventListener('change',()=>{const d=presets[$('pagePreset').value];if(d){$('customW').value=d[0];$('customH').value=d[1];}});
+function resetSettings(){
+ $('pagePreset').value='A4P';$('customW').value=210;$('customH').value=297;$('perPage').value='1';$('marginSize').value='6';$('columns').value='1';
+ $('qColor').value='#111111';$('qSize').value=25;$('qSizeVal').textContent='25';$('qWeight').value='700';$('qGap').value='normal';
+ $('oColor').value='#111111';$('oSize').value=20;$('oSizeVal').textContent='20';$('oWeight').value='700';$('optionLayout').value='vertical';
+ $('aColor').value='#16803c';$('aSize').value=18;$('aSizeVal').textContent='18';$('aWeight').value='700';$('showAnswers').value='show';$('aPosition').value='afterOptions';$('aAlign').value='left';
+ $('brand').value='PK Study Point';$('wmX').value=50;$('wmXVal').textContent='50';$('wmY').value=50;$('wmYVal').textContent='50';$('wmWidth').value=35;$('wmWidthVal').textContent='35';$('wmOpacity').value=13;$('wmOpacityVal').textContent='13';$('wmColor').value='#6b536f';$('wmFont').value=30;$('wmFontVal').textContent='30';watermarkData='';$('wmImage').value='';makePages();
+}
+function clearAll(){$('questions').value='';$('preview').innerHTML='';$('status').textContent='';}
+makePages();
+</script>
+</body>
+</html>
